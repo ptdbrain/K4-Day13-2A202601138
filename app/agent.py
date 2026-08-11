@@ -21,15 +21,24 @@ class AgentResult:
     quality_score: float
 
 
+@observe(as_type="retriever", name="rag-retrieval")
+def _retrieve_docs(message: str) -> list[str]:
+    return retrieve(message)
+
+
 class LabAgent:
     def __init__(self, model: str = "claude-sonnet-4-5") -> None:
         self.model = model
         self.llm = FakeLLM(model=model)
 
-    @observe(as_type="generation", capture_input=False, capture_output=False)
+    @observe(as_type="generation", name="llm-generation")
+    def _generate_llm(self, prompt_text: str):
+        return self.llm.generate(prompt_text)
+
+    @observe(name="chat-response", capture_input=False, capture_output=False)
     def run(self, user_id: str, feature: str, session_id: str, message: str) -> AgentResult:
         started = time.perf_counter()
-        docs = retrieve(message)
+        docs = _retrieve_docs(message)
         langfuse_client = get_langfuse_client()
         prompt = resolve_prompt(
             langfuse_client,
@@ -38,7 +47,7 @@ class LabAgent:
             message=message,
             enabled=tracing_enabled(),
         )
-        response = self.llm.generate(prompt.text)
+        response = self._generate_llm(prompt.text)
         quality_score = self._heuristic_quality(message, response.text, docs)
         latency_ms = int((time.perf_counter() - started) * 1000)
         cost_usd = self._estimate_cost(response.usage.input_tokens, response.usage.output_tokens)
@@ -47,6 +56,8 @@ class LabAgent:
             user_id=hash_user_id(user_id),
             session_id=session_id,
             tags=["lab", feature, self.model],
+            input=summarize_text(message),
+            output=summarize_text(response.text),
             metadata={
                 "prompt_name": prompt.name,
                 "prompt_label": prompt.label,
@@ -72,6 +83,17 @@ class LabAgent:
             cost_details={"total": cost_usd},
             prompt=prompt.managed_prompt,
         )
+
+        if hasattr(langfuse_client, "score") and callable(getattr(langfuse_client, "score")):
+            try:
+                langfuse_client.score(
+                    name="quality_score",
+                    value=quality_score,
+                    comment="Heuristic quality score",
+                )
+            except Exception:
+                pass
+
 
         metrics.record_request(
             latency_ms=latency_ms,

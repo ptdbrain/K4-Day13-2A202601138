@@ -1,0 +1,26 @@
+=== CP1 LOG VALIDATION EVIDENCE ===
+
+Validator Command Output:
+----------------------------------------
+--- Lab Verification Results ---
+Total log records analyzed: 20
+Records with missing required fields: 0
+Records with missing enrichment (context): 0
+Unique correlation IDs found: 10
+Potential PII leaks detected: 0
+
+--- Grading Scorecard (Estimates) ---
++ [PASSED] Basic JSON schema
++ [PASSED] Correlation ID propagation
++ [PASSED] Log enrichment
++ [PASSED] PII scrubbing
+
+Estimated Score: 100/100
+----------------------------------------
+
+Sample Structured Log Entry (with Correlation ID & PII Redaction):
+----------------------------------------
+{"service": "api", "payload": {"message_preview": "What is your refund policy? My email is [REDACTED_EMAIL]"}, "event": "request_received", "correlation_id": "req-3000c6d3", "user_id_hash": "2055254ee30a", "env": "dev", "model": "claude-sonnet-4-5", "feature": "qa", "session_id": "s01", "level": "info", "ts": "2026-08-11T07:56:28.700345Z"}
+{"service": "api", "payload": {"message_preview": "Here is my phone [REDACTED_PHONE_VN], what should be logged?"}, "event": "request_received", "correlation_id": "req-ec45f7d6", "user_id_hash": "64f6ec689229", "env": "dev", "model": "claude-sonnet-4-5", "feature": "qa", "session_id": "s05", "level": "info", "ts": "2026-08-11T07:56:29.331939Z"}
+{"service": "api", "payload": {"message_preview": "What is the policy for PII and credit card [REDACTED_CREDIT_CARD]?"}, "event": "request_received", "correlation_id": "req-803ad62a", "user_id_hash": "4d14d5d4f719", "env": "dev", "model": "claude-sonnet-4-5", "feature": "qa", "session_id": "s09", "level": "info", "ts": "2026-08-11T07:56:29.952404Z"}
+----------------------------------------

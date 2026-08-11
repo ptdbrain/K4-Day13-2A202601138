@@ -9,17 +9,19 @@
 
 ## 2. Kết quả kỹ thuật
 
-- Điểm `validate_logs.py`:
+- Điểm `validate_logs.py`: 100/100 (CP1 Validation)
 - Tổng số traces:
-- Số PII leak còn lại:
+- Số PII leak còn lại: 0
 - Link/đường dẫn dashboard:
+
 
 ## 3. Logging và tracing
 
-- Evidence correlation ID:
-- Evidence PII redaction:
+- Evidence correlation ID: `req-3000c6d3` (định dạng `req-<8hex>`)
+- Evidence PII redaction: `[REDACTED_EMAIL]`, `[REDACTED_PHONE_VN]`, `[REDACTED_CREDIT_CARD]` (Lưu trong `submission/evidence/cp1_evidence.txt`)
 - Evidence trace waterfall:
 - Giải thích một span đáng chú ý:
+
 
 ## 4. Prompt versioning
 
