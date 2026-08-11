@@ -7,5 +7,10 @@ data/audit.jsonl
 .env
 .pytest_cache/
 .pytest_tmp/
+pytest_cache_local/
+pytest_tmp/
+pytest_basetemp/
+pytest-cache-files-*/
+.tmp/
 .antigravity/
 
