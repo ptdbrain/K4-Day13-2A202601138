@@ -4,7 +4,7 @@
 
 - Tên nhóm: K4-Group-2A
 - Repository URL: https://github.com/ptdbrain/K4-Day13-2A202601138
-- Commit SHA cuối: e38e659673553a0e2b66a171157847ea6d4d332e
+- Commit SHA cuối: 04c93c0cf6edabe610e5bc696c00a4b5c27757c1
 - Thành viên và vai trò: 
   - Phan Trọng Đạt - 2A202601138 (Leader - Structured Logging, PII Redaction, Correlation ID)
   - Bùi Thu Trang - 2A202601758 (Tracing Adapter, Langfuse SDK & Span Instrumentation)
